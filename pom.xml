@@ -17,6 +17,7 @@
     </dependencies>
     <properties>
         <build.directory>${project.basedir}/build</build.directory>
+        <nativelibrary.name>libopencv_java310.so</nativelibrary.name>
     </properties>
     <distributionManagement>
         <snapshotRepository>
@@ -71,11 +72,28 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>sh</executable>
+                            <executable>bash</executable>
                             <workingDirectory>${project.basedir}/scripts</workingDirectory>
                             <arguments>
-                                <argument>config.sh</argument>
-                                <argument>${project.artifact}</argument>
+                                <argument>deb_package_check</argument>
+                                <argument>build-essential</argument>
+                                <argument>cmake</argument>
+                                <argument>git</argument>
+                                <argument>libgtk2.0-dev</argument>
+                                <argument>pkg-config</argument>
+                                <argument>libavcodec-dev</argument>
+                                <argument>libavformat-dev</argument>
+                                <argument>libswscale-dev</argument>
+                                <argument>python-dev</argument>
+                                <argument>python-numpy</argument>
+                                <argument>libtbb2</argument>
+                                <argument>libtbb-dev</argument>
+                                <argument>libjpeg-dev</argument>
+                                <argument>libpng12-dev</argument>
+                                <argument>libtiff5-dev</argument>
+                                <argument>libjasper-dev</argument>
+                                <argument>libdc1394-22-dev</argument>
+                                <argument>ant</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -87,6 +105,22 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>1.4.1</version>
                 <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <id>enforce-os</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireOS>
+                                    <family>unix</family>
+                                    <message>This POM is written to function on UNIX family of OS.
+                                            More specifically it should be a Debian flavour of Linux.</message>
+                                </requireOS>
+                            </rules>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>enforce-environment</id>
                         <goals>
@@ -105,7 +139,8 @@
                                 <requireEnvironmentVariable>
                                     <level>WARN</level>
                                     <variableName>MAKEFLAGS</variableName>
-                                    <message>No MAKEFLAGS environment variable. Build may be slow. To speed up the build you can try exporting MAKEFLAGS=-jX where X equals the number of parallel builds.</message>
+                                    <message>No MAKEFLAGS environment variable. Build may be slow. 
+                                        To speed up the build you can try exporting MAKEFLAGS=-jX where X equals the number of parallel builds.</message>
                                 </requireEnvironmentVariable>
                             </rules>
                         </configuration>
@@ -121,8 +156,8 @@
                 <configuration>
                     <instructions>
                         <Export-Package>*</Export-Package>
-                        <Bundle-NativeCode>libopencv_java310.so;osname=linux;processor=x86_64</Bundle-NativeCode>
-                        <Include-Resource>${build.directory}/lib/libopencv_java310.so</Include-Resource>
+                        <Bundle-NativeCode>${nativelibrary.name};osname=linux;processor=x86_64</Bundle-NativeCode>
+                        <Include-Resource>${build.directory}/lib/${nativelibrary.name}</Include-Resource>
                     </instructions>
                     <manifestLocation>${build.directory}/manifest</manifestLocation>
                     <niceManifest>true</niceManifest>
