@@ -5,8 +5,26 @@
     <artifactId>opencv</artifactId>
     <packaging>bundle</packaging>
     <version>3.1.0-SNAPSHOT</version>
-    <name>opencv</name>
-    <url>http://maven.apache.org</url>
+    <name>Open CV</name>
+    <licenses>
+        <license>
+            <name>License Agreement For Open Source Computer Vision Library (3-clause BSD License)</name>
+            <url></url>
+        </license>
+    </licenses>
+    <url>http://http://opencv.org/</url>
+    <scm>
+        <connection>scm:git:https://github.com/Itseez/opencv.git</connection>
+        <url>https://github.com/Itseez/opencv</url>
+    </scm>
+    <contributors>
+        <contributor>
+            <name>Kerry Billingham</name>
+            <email>contact (at) AvionicEngineers (d0t) c(0)m</email>
+            <organization>Java Technics</organization>
+            <url>www.javatechnics.com</url>
+        </contributor>
+    </contributors>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>

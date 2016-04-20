@@ -1,9 +1,17 @@
 #!/bin/bash
-
 ###########################################################################################
 #
 # 		This script checks for the required Debian packages are installed
 # 		to build OpenCV.
+# Commandline parameters:
+# $@ - These are the names of the packages to check with 'dpkg'
+#
+# Returns:
+#   0 - All packages installed (success)
+#   1 - One or more packages missing (failure)
+#   
+#   Kerry Billingham <contact (at) avionicengineers (d0t) com>
+#   20 April 2016
 #
 ###########################################################################################
 red=$'\e[1;31m'
