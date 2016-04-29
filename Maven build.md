@@ -43,16 +43,18 @@ Generally all that is required is the standard Maven command:
 
 One of the first things the build will do is check the required native dependencies. The Maven indicates the status of the required dependencies and will fail at this point if any are missing. Install using the package manager e.g. aptitude or apt-get.
 
+Once the build succesfully completes the artifacts are available as described above in 'Build Directory'.
+
 #### ARM 32-bit Architecture - Raspbian Distribution
-Similar to the x86 architecture the native dependencies are first checked so install any that are missing however currently there is no official `libtbb2` and `libtbb-dev` packages in the Raspbian distribution. However I have version 4.4.3 of Intel's Thread Building Blocks library available here as a Debian package.
+Similar to the x86 architecture the native dependencies are first checked so install any that are missing, however currently there are no official `libtbb2` and `libtbb-dev` packages in the Raspbian. Version 4.4.3 of Intel's Thread Building Blocks library are available [here](http://http://www.javatechnics.com/thread-building-blocks-tbb-4-4-3-for-raspbian) as a Raspbian-compatible Debian packages.
 
-**PLEASE NOTE THESE ARE NOT OFFICIAL RASPBIAN PACKAGES. INSTALL AT YOUR OWN RISK**
+**PLEASE NOTE THESE ARE NOT OFFICIAL RASPBIAN PACKAGES. INSTALL AT YOUR OWN RISK.**
 
-OpenCV is built using CMake and the Maven build process uses the the cmake-maven plugin. However the cmake-maven plugin by default downloads CMake at build time but unfortunately there is no binary for ARM architecture currently available. As a work around it is possible to use the native CMake (which is checked for availability in the above dependency checks). Assume all native dependencies are available the build can be started with the following command:
+OpenCV is built using CMake and the Maven build process uses the the [cmake-maven plugin](https://github.com/cmake-maven-project/cmake-maven-project). However the cmake-maven plugin by default downloads CMake at build time but unfortunately there is no binary for ARM architecture currently available. As a work around it is possible to use the native CMake (which is checked for availability in the above dependency checks). Assume all native dependencies are available the build can be started with the following command:
 
 `mvn clean install -Duse.native.cmake=true`
 
 Upon a successful build the libraries will be available as described above in 'Build Directory'.
 
 #### cmake-mave-plugin 3.4.1-b2-SNAPSHOT
-Should this plugin not be available in Maven central, the source can be found in my GitHub page here, checkout the `raspberrypi` branch and install. On x86 it is a standard Maven build and install command. If building on Raspbian you also need to supply the `-Duse.native.cmake=true` command-line option.
+Should this plugin not be available in Maven central, the source can be found at my GitHub page [here](https://github.com/jtkb/cmake-maven-project), checkout the `raspberrypi` branch and install. On x86 it is a standard Maven build and install command. If building on Raspbian you also need to supply the `-Duse.native.cmake=true` command-line option.
