@@ -38,6 +38,8 @@ By default the following build directories are created.
 `<OpenCV_root_dir>/build/target`
 
 Under `build` are the standard OpenCV artifacts. Under `build/target` can be found the OSGi compatible Java bundle. When deploying the bundle into an OSGi framework e.g. [Apache Karaf](http://karaf.apache.org/), loading of the native library is automatically taken care of. The standard Java library as created by the CMake process is also available as specified in the existing OpenCV documentation.
+
+The Maven build is initiated from the directory contain the `pom.xml` file.
 #### x86 or x86_64 Architecture:
 Generally all that is required is the standard Maven command:
 
@@ -48,7 +50,7 @@ One of the first things the build will do is check the required native dependenc
 Once the build succesfully completes the OSGi compatible artifacts are available as described above in 'Build Directory'.
 
 #### ARM 32-bit Architecture - Raspbian Distribution
-Similar to the x86 architecture the native dependencies are first checked so install any that are missing, however at the time of writing there are no official `libtbb2` and `libtbb-dev` packages in Raspbian. Version 4.4.3 of Intel's Thread Building Blocks library are available [here](http://http://www.javatechnics.com/thread-building-blocks-tbb-4-4-3-for-raspbian) as a Raspbian-compatible Debian packages.
+Similar to the x86 architecture the native dependencies are first checked so install any that are missing, however at the time of writing there are no official `libtbb2` and `libtbb-dev` packages in Raspbian. Version 4.4.3 of Intel's Thread Building Blocks library are available [here](http://www.javatechnics.com/thread-building-blocks-tbb-4-4-3-for-raspbian) as a Raspbian-compatible Debian packages.
 
 **PLEASE NOTE THESE ARE NOT OFFICIAL RASPBIAN PACKAGES. INSTALL AT YOUR OWN RISK.**
 
