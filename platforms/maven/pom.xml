@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>opencv.org</groupId>
+    <groupId>org.opencv</groupId>
     <artifactId>opencv</artifactId>
     <packaging>bundle</packaging>
     <version>3.2.0</version>
@@ -27,15 +27,79 @@
     </contributors>
     <dependencies>
         <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-container-karaf</artifactId>
+            <version>${pax.exam.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-junit4</artifactId>
+            <version>${pax.exam.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-atinject_1.0_spec</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.url</groupId>
+            <artifactId>pax-url-aether</artifactId>
+            <version>1.6.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>4.3.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <version>4.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.24</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.24</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>org.apache.karaf.log.core</artifactId>
+            <groupId>org.apache.karaf.log</groupId>
+            <version>4.0.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+            <version>1.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>
         <build.directory>../../build</build.directory>
         <nativelibrary.name>libopencv_java${lib.version.string}.so</nativelibrary.name>
+        <resources.directory>${build.directory}/src</resources.directory>
+        <pax.exam.version>4.8.0</pax.exam.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <distributionManagement>
         <snapshotRepository>
@@ -59,21 +123,6 @@
                         </fileset>
                     </filesets>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.maven-nar</groupId>
-                <artifactId>nar-maven-plugin</artifactId>
-                <version>3.3.0</version>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>nar-initiliase</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>nar-validate</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -125,8 +174,60 @@
                                 <argument>libtiff5-dev</argument>
                                 <argument>libjasper-dev</argument>
                                 <argument>libdc1394-22-dev</argument>
+                                <argument>execstack</argument>
                                 <argument>ant</argument>
                             </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>execstack</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${build.directory}/lib</workingDirectory>
+                            <executable>execstack</executable>
+                            <arguments>
+                                <argument>-c</argument>
+                                <argument>libopencv_java320.so</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>check-execstack</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/scripts</workingDirectory>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>execstack_check</argument>
+                                <argument>${build.directory}/lib/libopencv_java320.so</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${resources.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>resources</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
@@ -166,7 +267,7 @@
                                 <requireOS>
                                     <family>unix</family>
                                     <message>This POM is written to function on UNIX family of OS.
-                                            More specifically it should be a Debian flavour of Linux.</message>
+                                        More specifically it should be a Debian flavour of Linux.</message>
                                 </requireOS>
                             </rules>
                         </configuration>
@@ -190,7 +291,7 @@
                                     <level>WARN</level>
                                     <variableName>MAKEFLAGS</variableName>
                                     <message>No MAKEFLAGS environment variable. Build may be slow.
-To speed up the build you can try exporting MAKEFLAGS=-jX where X equals the number of parallel builds.</message>
+                                        To speed up the build you can try exporting MAKEFLAGS=-jX where X equals the number of parallel builds.</message>
                                 </requireEnvironmentVariable>
                             </rules>
                         </configuration>
@@ -231,7 +332,7 @@ To speed up the build you can try exporting MAKEFLAGS=-jX where X equals the num
             <plugin>
                 <groupId>com.googlecode.cmake-maven-project</groupId>
                 <artifactId>cmake-maven-plugin</artifactId>
-                <version>3.4.1-b2-SNAPSHOT</version>
+                <version>3.4.1-b2</version>
                 <executions>
                     <execution>
                         <id>cmake-generate</id>
@@ -257,6 +358,11 @@ To speed up the build you can try exporting MAKEFLAGS=-jX where X equals the num
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.15</version>
             </plugin>
         </plugins>
     </build>
